@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Gregory Sivo, Truex Consultancy</title>
+<style>
+  :root { --bg:#fcfbf8; --card:#fff; --ink:#1c1b19; --muted:#5e5c56; --line:#dddad2; --accent:#9c8756; --btn-bg:#1c1b19; --btn-ink:#fff; --play:#b39e6a;
+    --serif:"Libre Caslon Display","Playfair Display",Georgia,serif; --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1c1b19; --card:#262522; --ink:#f4f2ec; --muted:#b8b5ac; --line:#3a3935; --accent:#b39e6a; --btn-bg:#b39e6a; --btn-ink:#1c1b19; } }
+  * { box-sizing:border-box; } [hidden]{display:none!important}
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 var(--sans); }
+  main { max-width:760px; margin:0 auto; padding:32px 16px 56px; }
+  .eyebrow { color:var(--muted); font-size:14px; margin:0 0 8px; }
+  h1,h2 { font-family:var(--serif); font-weight:400; }
+  h1 { font-size:clamp(26px,5vw,38px); line-height:1.15; margin:0 0 20px; letter-spacing:-.01em; }
+  h2 { font-size:20px; margin:0 0 12px; }
+  .stage { position:relative; width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:linear-gradient(135deg,#2b2a26,#1c1b19); border:1px solid var(--line); border-top:3px solid var(--play); color:#f4f2ec; }
+  .card { position:absolute; inset:0; display:grid; align-content:center; gap:8px; padding:11% 7% 14%; }
+  .card .k { color:var(--play); font-size:clamp(11px,1.9vw,15px); letter-spacing:.06em; text-transform:uppercase; }
+  .card b { font-family:var(--serif); font-weight:400; font-size:clamp(22px,5.2vw,44px); line-height:1.12; }
+  .card .s { font-size:clamp(13px,2.4vw,19px); opacity:.8; }
+  .card ul { list-style:none; margin:6px 0 0; padding:0; display:grid; gap:4px; font-size:clamp(13px,2.5vw,20px); }
+  .card li { padding-left:18px; position:relative; background:none; border:0; border-radius:0; } .card li::before { content:""; position:absolute; left:0; top:.6em; width:7px; height:7px; border-radius:50%; background:var(--play); }
+  .logo { position:absolute; top:10px; left:14px; opacity:.9 } .logo img { height:22px; width:auto; display:block; }
+  .sub { position:absolute; left:0; right:0; bottom:8px; margin:0 auto; width:fit-content; max-width:96%; background:rgba(0,0,0,.72); color:#fff; font-size:clamp(11px,2vw,15px); line-height:1.35; padding:5px 10px; border-radius:6px; text-align:center; }
+  .bar { position:absolute; left:0; right:0; bottom:0; height:4px; background:rgba(255,255,255,.18); } .bar i { display:block; height:100%; width:0; background:var(--play); }
+  .ctl { position:absolute; top:8px; right:8px; width:40px; height:40px; border-radius:50%; border:0; background:rgba(0,0,0,.6); color:#fff; font-size:16px; cursor:pointer; }
+  .facade { position:absolute; inset:0; border:0; width:100%; background:linear-gradient(135deg,#2b2a26,#1c1b19); color:#f4f2ec; display:grid; align-content:center; justify-items:center; gap:14px; padding:6%; text-align:center; cursor:pointer; font:inherit; }
+  .facade b { font-family:var(--serif); font-weight:400; font-size:clamp(22px,5vw,38px); line-height:1.15; }
+  .facade .logoimg { height:34px; width:auto; }
+  .play { width:76px; height:76px; border-radius:50%; background:var(--play); color:#1c1b19; display:grid; place-items:center; font-size:28px; box-shadow:0 6px 24px rgba(0,0,0,.35); }
+  .label { font-size:13px; color:var(--muted); margin:10px 0 0; }
+  .grid { display:grid; gap:10px; padding:0; margin:0 0 28px; list-style:none; }
+  .grid li { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 16px; display:grid; gap:2px; }
+  .grid li span { color:var(--muted); font-size:14px; }
+  .cta { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; margin-top:28px; }
+  .cta p { margin:0 0 14px; color:var(--muted); }
+  .btn { display:inline-block; background:var(--btn-bg); color:var(--btn-ink); text-decoration:none; padding:12px 22px; border-radius:10px; font-weight:600; }
+  .btn:focus-visible,.facade:focus-visible,.ctl:focus-visible { outline:3px solid var(--play); outline-offset:2px; }
+  footer { margin-top:28px; color:var(--muted); font-size:13px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">A short introduction from Truex Consultancy</p>
+  <h1>Hi, I'm Gregory: independent GMP and GDP consultant</h1>
+
+  <div class="stage" id="stage">
+    <div class="logo" id="logo" hidden><img src="logo-480.webp" alt="Truex Consultancy"></div>
+    <div class="card" id="card" hidden><span class="k"></span><b></b><span class="s"></span><ul></ul></div>
+    <div class="sub" id="sub" aria-live="off" hidden></div>
+    <div class="bar"><i id="bar"></i></div>
+    <button class="ctl" id="ctl" type="button" aria-label="Pause or play" hidden>&#10074;&#10074;</button>
+    <audio id="aud" preload="none" src="narration.wav"></audio>
+    <button class="facade" id="play" type="button" aria-label="Play the introduction">
+      <img class="logoimg" src="logo-480.webp" alt=""><b>Gregory Sivo<br>Truex Consultancy</b><span class="play" aria-hidden="true">&#9654;</span>
+    </button>
+  </div>
+  <p class="label">About 110 seconds. Narrated in my own voice, generated with AI.</p>
+
+  <h2 style="margin-top:28px">Examples of my work (sector only)</h2>
+  <ul class="grid"><li><b>Technology transfer and supplier qualification</b><span>Contract manufacturing (clinical materials)</span></li><li><b>New product introduction and batch release</b><span>Pharmaceutical manufacturing</span></li><li><b>GDP gap assessment</b><span>Pharmaceutical distribution</span></li><li><b>GDP implementation and authority audit</b><span>Pharmaceutical wholesale</span></li></ul>
+
+  <div class="cta">
+    <h2>Get to know me, or discuss a specific assignment</h2>
+    <p>Pick a time that suits you. A short call is enough.</p>
+    <a class="btn" id="book" href="https://truex-consultancy.com/book?lang=en&amp;utm_campaign=recruiter-intro&amp;utm_content=intro-video">Book a meeting</a>
+  </div>
+  <footer>Gregory Sivo · Truex Consultancy · truex-consultancy.com · +31 6 40198016 · info@truex-consultancy.com</footer>
+</main>
+<script>
+(function () {
+  var D = {"cues":[{"start":0,"end":15.28,"slide":"title","text":"Hi, I'm Gregory Sivo, founder of Truex Consultancy. I'm an independent G M P and G D P consultant, based in Amersfoort, in the Netherlands. This is a short introduction, so you know who I am and what I can do for your clients."},{"start":15.68,"end":28.32,"slide":"services","text":"I work in four areas. First, G M P consultancy. Second, G D P and quality management systems. Third, inspection readiness and remediation. And fourth, training for teams and management."},{"start":28.72,"end":46,"slide":"p1","text":"Here are four examples of assignments, described by sector only. At a contract manufacturer of clinical materials, I led supplier qualification from technology transfer through to commercial manufacturing, so that only qualified materials were used, on the client's timelines."},{"start":46.4,"end":62.88,"slide":"p2","text":"At a pharmaceutical manufacturer, I ran new product introductions and product transfers across quality, supply chain and I T. Before batch release, I checked the batch records against the registration dossier. Every audit I prepared there had a satisfactory outcome."},{"start":63.28,"end":76.48,"slide":"p3","text":"At a pharmaceutical distributor, I carried out a G D P gap assessment against the E U guidelines. I then harmonised local site procedures with global quality standards, and supported the teams through the change."},{"start":76.88,"end":88.48,"slide":"p4","text":"And at a pharmaceutical wholesaler, I implemented the new G D P standards ahead of a Health Authority audit. The outcome was favourable, and the company received its updated G D P licence."},{"start":88.88,"end":104.16,"slide":"how","text":"I work through my own company, and I'm available now for my next assignment. I work remotely, and if on-site presence is needed, I'm happy to make arrangements. I'm looking forward to working internationally, anywhere. I speak Dutch, English and Spanish."},{"start":104.56,"end":112.24,"slide":"book","text":"If you'd like to get to know me, or to discuss a specific assignment, you can book a meeting with me using the button below. Thank you for watching."}],"slides":{"title":{"kicker":"Introduction","title":"Gregory Sivo","sub":"Founder, Truex Consultancy","items":["Independent GMP and GDP consultant","Amersfoort, the Netherlands"]},"services":{"kicker":"What I do","title":"Four areas","items":["GMP consultancy","GDP and quality management systems","Inspection readiness and remediation","Training for teams and management"]},"p1":{"kicker":"Assignment 1 · Contract manufacturing (clinical materials)","title":"Technology transfer and supplier qualification","items":["Supplier qualification from tech transfer to commercial manufacturing","Only qualified materials released into manufacturing","Met client timelines"]},"p2":{"kicker":"Assignment 2 · Pharmaceutical manufacturing","title":"New product introduction and batch release","items":["Product introductions and transfers across QA, supply chain and IT","Batch records checked against the registration dossier before release","Every audit prepared had a satisfactory outcome"]},"p3":{"kicker":"Assignment 3 · Pharmaceutical distribution","title":"GDP gap assessment","items":["Assessment against the EU GDP Guidelines","Local procedures harmonised with global quality standards","Teams supported through the change"]},"p4":{"kicker":"Assignment 4 · Pharmaceutical wholesale","title":"GDP implementation and authority audit","items":["New GDP standards implemented","Favourable Health Authority audit","Updated GDP licence granted"]},"how":{"kicker":"How I work","title":"Available now","items":["Through my own company","Remote, with on-site arrangements when needed","Open to assignments anywhere, internationally","Dutch, English and Spanish"]},"book":{"kicker":"Next step","title":"Let's get to know each other","items":["Book a meeting below","truex-consultancy.com"]}}};
+  var aud = document.getElementById("aud"), play = document.getElementById("play"), card = document.getElementById("card"),
+      sub = document.getElementById("sub"), bar = document.getElementById("bar"), ctl = document.getElementById("ctl"), logo = document.getElementById("logo");
+  var cur = -1;
+  function show(i) {
+    if (i === cur) return; cur = i;
+    var c = D.cues[i]; if (!c) return;
+    var s = D.slides[c.slide] || {};
+    card.querySelector(".k").textContent = s.kicker || "";
+    card.querySelector("b").textContent = s.title || "";
+    card.querySelector(".s").textContent = s.sub || "";
+    var ul = card.querySelector("ul"); ul.innerHTML = "";
+    (s.items || []).forEach(function (t) { var li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
+    sub.textContent = c.text;
+  }
+  function tick() {
+    var t = aud.currentTime, idx = 0;
+    for (var i = 0; i < D.cues.length; i++) if (t >= D.cues[i].start) idx = i;
+    show(idx);
+    bar.style.width = (aud.duration ? (t / aud.duration) * 100 : 0) + "%";
+  }
+  play.addEventListener("click", function () {
+    play.hidden = true; card.hidden = false; sub.hidden = false; ctl.hidden = false; logo.hidden = false;
+    aud.play(); tick();
+  });
+  ctl.addEventListener("click", function () { if (aud.paused) aud.play(); else aud.pause(); });
+  aud.addEventListener("play", function () { ctl.innerHTML = "&#10074;&#10074;"; });
+  aud.addEventListener("pause", function () { ctl.innerHTML = "&#9654;"; });
+  aud.addEventListener("timeupdate", tick);
+  aud.addEventListener("ended", function () { show(D.cues.length - 1); bar.style.width = "100%"; });
+})();
+</script>
+</body>
+</html>
