@@ -203,6 +203,7 @@ details p { margin-top: 10px; font-size: .875rem; }
 <footer><div class="wrap">
   <details id="transcript"><summary>Transcript</summary><p>Hi, I&#39;m Gregory Sivo, founder of Truex Consultancy. I&#39;m an independent G M P and G D P consultant, based in Amersfoort, in the Netherlands. This is a short introduction, so you know who I am and what I can do for your clients.</p><p>I work in four areas. First, G M P consultancy. Second, G D P and quality management systems. Third, inspection readiness and remediation. And fourth, training for teams and management.</p><p>Here are four examples of assignments, described by sector only. At a contract manufacturer of clinical materials, I led supplier qualification from technology transfer through to commercial manufacturing, so that only qualified materials were used, on the client&#39;s timelines.</p><p>At a pharmaceutical manufacturer, I ran new product introductions and product transfers across quality, supply chain and I T. Before batch release, I checked the batch records against the registration dossier. Every audit I prepared there had a satisfactory outcome.</p><p>At a pharmaceutical distributor, I carried out a G D P gap assessment against the E U guidelines. I then harmonised local site procedures with global quality standards, and supported the teams through the change.</p><p>And at a pharmaceutical wholesaler, I implemented the new G D P standards ahead of a Health Authority audit. The outcome was favourable, and the company received its updated G D P licence.</p><p>I work through my own company, and I&#39;m available now for my next assignment. I work remotely, and if on-site presence is needed, I&#39;m happy to make arrangements. I&#39;m looking forward to working internationally, anywhere. I speak Dutch, English and Spanish.</p><p>If you&#39;d like to get to know me, or to discuss a specific assignment, you can book a meeting with me using the button below. Thank you for watching.</p></details>
   <p>Gregory Sivo, Truex Consultancy, Amersfoort, the Netherlands. <a href="https://truex-consultancy.com">truex-consultancy.com</a></p>
+  <p>This page sends me a short notification when it is opened or played, so I can follow up. It stores no personal data.</p>
 </div></footer>
 
 <script>
@@ -256,7 +257,34 @@ details p { margin-top: 10px; font-size: .875rem; }
   document.querySelectorAll("[data-cue]").forEach(function (b) { b.addEventListener("click", function () { jump(+b.getAttribute("data-cue")); }); });
   $("watch").addEventListener("click", function () { setTimeout(function () { if (aud.paused) aud.play(); }, 350); });
   render(0, false);
-  render(0, false);
+
+  // Live alerts to the owner (ntfy.sh, same topic as the other outreach pages). Only real moments, never page loads:
+  // mail scanners can load a page without a person, so "opened" fires on the first real pointer, key, touch or scroll.
+  var NTFY = "gx-36da9888ea66eebd00e1", TITLE = "Recruiter intro";
+  var ICON = { opened: "eyes", play: "arrow_forward", half: "hourglass_flowing_sand", complete: "white_check_mark", book: "calendar", chapter: "mag" };
+  var fired = {};
+  function alertMe(ev, value) {
+    if (!NTFY) return;
+    var url = "https://ntfy.sh/" + NTFY + "?title=" + encodeURIComponent(TITLE) + "&tags=" + ICON[ev] + "&priority=" + (ev === "book" ? 4 : 3);
+    var body = "intro " + ev + (value ? ": " + value : "");
+    try { fetch(url, { method: "POST", mode: "no-cors", body: body, keepalive: true }).catch(function () { try { navigator.sendBeacon(url, body); } catch (e) {} }); }
+    catch (e) { try { navigator.sendBeacon(url, body); } catch (e2) {} }
+  }
+  function once(key, ev, value) { if (!fired[key]) { fired[key] = 1; alertMe(ev, value); } }
+  ["pointerdown", "mousemove", "keydown", "touchstart", "scroll"].forEach(function (t) {
+    window.addEventListener(t, function () { once("opened", "opened"); }, { passive: true, once: true });
+  });
+  aud.addEventListener("play", function () { once("play", "play"); });
+  aud.addEventListener("ended", function () { once("complete", "complete"); });
+  aud.addEventListener("timeupdate", function () { if (aud.duration && aud.currentTime / aud.duration >= 0.5) once("half", "half"); });
+  document.querySelectorAll('a[href*="truex-consultancy.com/book"]').forEach(function (a) {
+    a.addEventListener("click", function () {
+      alertMe("book", a.closest("header") ? "header button" : a.closest(".hero") ? "top button" : "closing button");
+    });
+  });
+  document.querySelectorAll("[data-cue]").forEach(function (b) {
+    b.addEventListener("click", function () { alertMe("chapter", b.querySelector(".row-title").textContent); });
+  });
 })();
 </script>
 </body>
