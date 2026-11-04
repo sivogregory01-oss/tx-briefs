@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>White Raven</title>
+<style>
+  /* Truex brand: warm white ground, warm charcoal ink, brass accent (from the website's design tokens). */
+  :root {
+    --bg: #fcfbf8; --card: #ffffff; --ink: #1c1b19; --muted: #5e5c56;
+    --line: #dddad2; --accent: #9c8756; --lock: #f3f1eb; --focus: #7a6a3f;
+    --btn-bg: #1c1b19; --btn-ink: #ffffff; --play: #b39e6a;
+    /* Type stack as documented in the website's DESIGN.md. Fonts are not downloaded: they apply only where installed. */
+    --serif: "Libre Caslon Display", "Playfair Display", Georgia, serif;
+    --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1c1b19; --card: #262522; --ink: #f4f2ec; --muted: #b8b5ac; --line: #3a3935; --accent: #b39e6a; --lock: #232220; --focus: #b39e6a; --btn-bg: #b39e6a; --btn-ink: #1c1b19; }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+  .eyebrow { color: var(--muted); font-size: 14px; margin: 0 0 8px; }
+  h1, h2 { font-family: var(--serif); font-weight: 400; }
+  h1 { font-size: clamp(26px, 5vw, 38px); line-height: 1.15; margin: 0 0 20px; letter-spacing: -0.01em; }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #000; border: 1px solid var(--line); }
+  .video iframe, .facade { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .facade { padding: 0; background: #0e0e0d; cursor: pointer; }
+  .facade img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .facade .play { position: absolute; inset: 0; margin: auto; width: 76px; height: 76px; border-radius: 50%; background: var(--play); color: #1c1b19; display: none; place-items: center; font-size: 28px; box-shadow: 0 6px 24px rgba(0,0,0,.35); }
+  .facade.noimg .play { display: grid; }
+  .facade:focus-visible { outline: 3px solid var(--play); outline-offset: -3px; }
+  .stage { position: absolute; inset: 0; background: #0e0e0d; color: #f4f2ec; }
+  .stage img.slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .stage .card { position: absolute; inset: 0; display: grid; align-content: center; gap: 6px; padding: 3% 6% 21%; background: linear-gradient(135deg, #2b2a26, #1c1b19); border-top: 3px solid var(--play); }
+  .stage .card b { font-size: clamp(20px, 5vw, 38px); line-height: 1.15; }
+  .stage .card .s { font-size: clamp(14px, 2.6vw, 20px); opacity: .8; }
+  .stage .sub { position: absolute; left: 0; right: 0; bottom: 6px; margin: 0 auto; width: fit-content; max-width: 96%; background: rgba(0,0,0,.72); color: #fff; font-size: clamp(12px, 2.3vw, 17px); line-height: 1.35; padding: 6px 10px; border-radius: 6px; text-align: center; }
+  .stage .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(255,255,255,.2); }
+  .stage .bar i { display: block; height: 100%; width: 0; background: var(--play); }
+  .stage .ctl { position: absolute; top: 8px; right: 8px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(0,0,0,.6); color: #fff; font-size: 16px; cursor: pointer; }
+  .stage .ctl:focus-visible { outline: 3px solid var(--play); }
+  .facade.titlecard { background: linear-gradient(135deg, #2b2a26, #1c1b19); border-top: 3px solid var(--play); color: #f4f2ec; display: grid; align-content: center; justify-items: center; gap: 14px; padding: 6%; text-align: center; }
+  .facade.titlecard b { font-size: clamp(20px, 5vw, 36px); line-height: 1.15; }
+  .facade.titlecard .play { position: static; display: grid; }
+  .video .empty { display: grid; place-items: center; height: 100%; color: #bbb; text-align: center; padding: 16px; }
+  .label { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+  section { margin-top: 36px; }
+  h2 { font-size: 20px; margin: 0 0 12px; }
+  ol { margin: 0; padding: 0; list-style: none; counter-reset: n; display: grid; gap: 10px; }
+  li { counter-increment: n; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px 14px 52px; position: relative; }
+  li::before { content: counter(n); position: absolute; left: 16px; top: 14px; width: 24px; height: 24px; border-radius: 50%; background: var(--btn-bg); color: var(--btn-ink); font-size: 13px; font-weight: 600; display: grid; place-items: center; }
+  .gap { background: var(--lock); border: 1px dashed var(--line); border-radius: 12px; padding: 16px; }
+  .gap h2 { font-size: 17px; margin-bottom: 6px; }
+  .gap p { margin: 0 0 12px; color: var(--muted); }
+  .cta { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .cta p { margin: 0 0 16px; color: var(--muted); }
+  .btn { display: inline-block; background: var(--btn-bg); color: var(--btn-ink); text-decoration: none; font-weight: 600; padding: 12px 20px; border-radius: 8px; }
+  .btn:hover { opacity: .9; }
+  .btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; }
+  footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
+  /* Brand: the logo is black, so it always sits on a white tile and stays readable in dark mode. */
+  .tile { display: inline-block; background: #fff; border-radius: 10px; padding: 8px 14px; line-height: 0; border: 1px solid var(--line); }
+  .tile img { display: block; height: auto; }
+  .brand { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .brand .tile img { width: 168px; }
+  .brand-tag { font-size: 13px; line-height: 1.4; color: var(--muted); text-align: right; }
+  .who { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
+  .who .tile img { width: 150px; }
+  .who h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 6px; font-weight: 600; }
+  .who b { display: block; font-size: 18px; }
+  .who .role, .who .loc { display: block; color: var(--muted); font-size: 14px; }
+  .who .links { margin: 8px 0 0; font-size: 15px; display: flex; gap: 6px 16px; flex-wrap: wrap; }
+  .who .links a { color: var(--ink); text-underline-offset: 3px; }
+  .who .links a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .badge { position: absolute; top: 10px; left: 10px; background: #fff; border-radius: 6px; padding: 4px 8px; line-height: 0; pointer-events: none; box-shadow: 0 1px 6px rgba(0,0,0,.3); }
+  .badge img { height: 24px; width: auto; display: block; }
+  .stage .card small { font-size: clamp(12px, 2.3vw, 16px); line-height: 1.6; opacity: .92; margin-top: 8px; }
+  .stage .card .tile { justify-self: start; margin-bottom: 10px; }
+  .stage .card .tile img { width: clamp(90px, 16vw, 130px); }
+  .stage .card .tile { padding: 5px 10px; margin-bottom: 4px; }
+  .stage .card b { font-size: clamp(17px, 4vw, 30px); }
+  .facade .tile img { width: clamp(120px, 24vw, 190px); height: auto; object-fit: contain; }
+  @media (max-width: 520px) { .brand-tag { text-align: left; } }
+</style>
+</head>
+<body>
+<main>
+  <header class="brand">
+    <a class="tile" id="brandlink" href="https://truex-consultancy.com" aria-label="Truex Consultancy"><img src="../a/logo-480.webp" width="480" height="136" alt="Truex Consultancy"></a>
+    <p class="brand-tag">GMP &amp; GDP compliance consultancy<br>Amersfoort, the Netherlands</p>
+  </header>
+  <p class="eyebrow">Gregory · made for Johan at White Raven</p>
+  <h1>Johan, here&#39;s what I noticed at White Raven</h1>
+
+  <div class="video" id="video" data-src=""><div class="stage"><img class="slide" id="slide" alt="" hidden><span class="badge"><img src="../a/logo-480.webp" width="85" height="24" alt=""></span><div class="card" id="card" hidden><span class="tile"><img src="../a/logo-480.webp" width="480" height="136" alt=""></span><b></b><span class="s"></span><small></small></div><div class="sub" id="sub" aria-live="off"></div><div class="bar"><i id="bar"></i></div><button class="ctl" id="ctl" type="button" aria-label="Pause / play">&#10074;&#10074;</button><audio id="aud" preload="none" src="narration.wav"></audio><button class="facade titlecard" id="nplay" type="button" aria-label="Play video"><span class="tile"><img src="../a/logo-480.webp" width="480" height="136" alt=""></span><b>White Raven</b><span class="play" aria-hidden="true">&#9654;</span></button></div></div>
+  <p class="label">Narrated with an AI version of my own voice. Script written and reviewed by me. About 90 seconds.</p>
+
+  <section>
+    <h2>Three things I saw</h2>
+    <ol>
+      <li>You were the first European GMP-certified facility using Cytiva&#39;s SA25 gloveless aseptic workcell, certified under Annex 1 in February 2025.</li>
+      <li>Your jobs page lists a Process Engineer and a Manufacturing Coordinator (deviations and CAPA included), and no QA role.</li>
+      <li>Your 29 May 2026 customer story describes computer system validation and an open, API-enabled eQMS built for AI-assisted quality processes.</li>
+    </ol>
+  </section>
+
+  <section class="gap">
+    <h2>What I&#39;d do about each</h2>
+    <p>I explain it in the video, including what each one could cost you. Prefer to read? Reply with the number (1, 2 or 3) and I&#39;ll send just that one.</p>
+    <a class="btn ghost" id="reply" href="mailto:info@truex-consultancy.com?subject=Re%3A%20White%20Raven%3A%203%20things%2C%2090%20seconds&amp;body=1%20%2F%202%20%2F%203%3A%20">Reply with a number</a>
+  </section>
+
+  <section class="cta">
+    <h2>Free 15-minute GMP readiness mini-review</h2>
+    <p>I walk you through the three points, show the fix for each, and leave you a one-page action plan. No obligation.</p>
+    <a class="btn" id="book" href="https://truex-consultancy.com/book?lang=en&amp;utm_campaign=video-pilot&amp;utm_content=ba77edaf">Pick a time</a>
+  </section>
+
+  <section class="who">
+    <a class="tile" href="https://truex-consultancy.com" aria-label="Truex Consultancy"><img src="../a/logo-480.webp" width="480" height="136" alt="Truex Consultancy"></a>
+    <div>
+      <h2>Who is behind this</h2>
+      <b>Gregory Sivo</b>
+      <span class="role">GMP and GDP consultant, Truex Consultancy</span>
+      <span class="loc">Amersfoort, the Netherlands</span>
+      <p class="links"><a href="https://truex-consultancy.com">truex-consultancy.com</a> <a href="tel:+31640198016">+31 6 40198016</a> <a href="mailto:info@truex-consultancy.com">info@truex-consultancy.com</a></p>
+    </div>
+  </section>
+
+  <footer>Gregory Sivo, Truex Consultancy. Not relevant? Reply &quot;no&quot; and I won&#39;t write again.</footer>
+</main>
+
+<script>window.NARR = {"cues":[{"start":0,"end":10.48,"slide":"title","text":"Hi Johan, it's Gregory. I read your May story on the digital-first eQMS and computer system validation, and I put together three quick observations."},{"start":10.88,"end":27.68,"slide":"3","text":"Your story describes an open, API-enabled eQMS built for AI-assisted quality processes. That's ahead of most. The EU's work on Annex twenty-two for AI in GMP is aimed at exactly this, so it's worth checking how your setup would map to it."},{"start":28.08,"end":43.44,"slide":"1","text":"You were the first European facility certified with Cytiva's S-A twenty-five gloveless workcell, under Annex one, in February twenty twenty-five. That's a strong story for customers, and it sets a high bar for the documentation behind it."},{"start":43.84,"end":58.24,"slide":"2","text":"Your jobs page lists a process engineer and a manufacturing coordinator who handles deviations and CAPA, and no QA role. As volume grows, who owns quality oversight day to day is worth making explicit."},{"start":58.64,"end":70.24,"slide":"offer","text":"That's the ninety seconds. If useful, I'd be glad to give you fifteen minutes to go through the three points and leave you a one-page action plan. Reply with a number, or pick a time on the page. Thanks."}],"obs":{"1":"You were the first European GMP-certified facility using Cytiva's SA25 gloveless aseptic workcell, certified under Annex 1 in February 2025.","2":"Your jobs page lists a Process Engineer and a Manufacturing Coordinator (deviations and CAPA included), and no QA role.","3":"Your 29 May 2026 customer story describes computer system validation and an open, API-enabled eQMS built for AI-assisted quality processes."},"title":"White Raven","titleSub":"Three things I saw","offer":"Free 15-minute GMP readiness mini-review","offerSub":"I walk you through the three points, show the fix for each, and leave you a one-page action plan. No obligation.","contact":"Gregory Sivo · Truex Consultancy · truex-consultancy.com · +31 6 40198016 · info@truex-consultancy.com"};</script>
+<script>
+(function () {
+  var TRACK_URL = "";
+  var SLUG = "ba77edaf";
+  var start = Date.now();
+  var human = false;
+  var maxScroll = 0;
+  var sent = {};
+
+  // Live alerts (free, no account): only the moments that matter, so a phone buzzes when someone really looks.
+  var NTFY = "gx-36da9888ea66eebd00e1", CO = "White Raven";
+  var ALERTS = { human_view: "eyes", video_play: "arrow_forward", scroll_90: "book", video_complete: "white_check_mark", cta_reply: "speech_balloon", cta_book: "calendar" };
+  function alertMe(event, value) {
+    if (!NTFY || !ALERTS[event]) return;
+    try {
+      var url = "https://ntfy.sh/" + NTFY + "?title=" + encodeURIComponent(CO) + "&tags=" + ALERTS[event] + "&priority=" + (event.indexOf("cta_") === 0 ? 4 : 3);
+      navigator.sendBeacon(url, event.replace(/_/g, " ") + (value ? " " + value : ""));
+    } catch (e) {}
+  }
+
+  function send(event, value) {
+    alertMe(event, value);
+    if (!TRACK_URL) { try { console.debug("[track]", SLUG, event, value || ""); } catch (e) {} return; }
+    try {
+      var body = JSON.stringify({ slug: SLUG, event: event, value: value || "", ua: navigator.userAgent, ref: document.referrer });
+      if (!(navigator.sendBeacon && navigator.sendBeacon(TRACK_URL, body))) {
+        fetch(TRACK_URL, { method: "POST", mode: "no-cors", body: body, keepalive: true });
+      }
+    } catch (e) {}
+  }
+  function once(key, fn) { if (!sent[key]) { sent[key] = true; fn(); } }
+
+  // 1. Link opened. Corporate mail scanners can load this without a person, so it is a weak signal.
+  send("page_view");
+
+  // 2. Human signal: first real pointer, key, touch or scroll input. Scanners never produce this.
+  function markHuman() { human = true; once("human_view", function () { send("human_view"); }); }
+  ["pointerdown", "mousemove", "keydown", "touchstart", "scroll"].forEach(function (t) {
+    window.addEventListener(t, markHuman, { passive: true, once: true });
+  });
+
+  // 3. Engaged time (humans only), every 10s while visible.
+  setInterval(function () {
+    if (human && document.visibilityState === "visible") send("engaged_seconds", Math.round((Date.now() - start) / 1000));
+  }, 10000);
+
+  // 4. Scroll depth.
+  window.addEventListener("scroll", function () {
+    var h = document.documentElement;
+    var pct = Math.round(((h.scrollTop + window.innerHeight) / h.scrollHeight) * 100);
+    maxScroll = Math.max(maxScroll, pct);
+    [50, 90].forEach(function (t) { if (maxScroll >= t) once("scroll_" + t, function () { send("scroll_" + t); }); });
+  }, { passive: true });
+
+  // 5. Video: click-to-play facade, so a play is a real, countable click.
+  var box = document.getElementById("video");
+  var facade = document.getElementById("play");
+  if (facade) {
+    var img = facade.querySelector("img");
+    if (img) {
+      img.addEventListener("error", function () { facade.classList.add("noimg"); img.remove(); });
+    }
+    facade.addEventListener("click", function () {
+      once("video_play", function () { send("video_play"); });
+      var f = document.createElement("iframe");
+      f.src = box.getAttribute("data-src") + "?autoplay=1&hide_owner=true&hideEmbedTopBar=true";
+      f.allow = "autoplay; fullscreen";
+      f.setAttribute("allowfullscreen", "");
+      f.title = facade.getAttribute("aria-label");
+      box.replaceChildren(f);
+    });
+  }
+
+  // 5b. Narrated walkthrough: slides follow the audio. Gives real watch-percentage events.
+  var N = window.NARR;
+  if (N) {
+    var aud = document.getElementById("aud"), slideEl = document.getElementById("slide"), cardEl = document.getElementById("card");
+    var cardB = cardEl.querySelector("b"), cardS = cardEl.querySelector(".s"), cardC = cardEl.querySelector("small");
+    var subEl = document.getElementById("sub"), barEl = document.getElementById("bar"), nplay = document.getElementById("nplay"), ctl = document.getElementById("ctl");
+    var cur = -1;
+    var showCard = function (b, s, c) { slideEl.hidden = true; cardEl.hidden = false; cardB.textContent = b; cardS.textContent = s || ""; cardC.textContent = c || ""; };
+    var showCue = function (i) {
+      cur = i;
+      var c = N.cues[i];
+      subEl.textContent = c.text;
+      if (c.slide === "title") return showCard(N.title, N.titleSub);
+      if (c.slide === "offer") return showCard(N.offer, "", N.contact);
+      slideEl.onerror = function () { showCard(N.obs[c.slide], ""); };
+      slideEl.onload = function () { slideEl.hidden = false; cardEl.hidden = true; };
+      slideEl.alt = N.obs[c.slide];
+      slideEl.src = "shot" + c.slide + ".png";
+    };
+    aud.addEventListener("timeupdate", function () {
+      var t = aud.currentTime, i = 0;
+      for (var k = 0; k < N.cues.length; k++) if (t >= N.cues[k].start) i = k;
+      if (i !== cur) showCue(i);
+      var pct = aud.duration ? t / aud.duration : 0;
+      barEl.style.width = (pct * 100) + "%";
+      [25, 50, 75].forEach(function (m) { if (pct * 100 >= m) once("video_" + m, function () { send("video_" + m); }); });
+    });
+    aud.addEventListener("ended", function () { once("video_complete", function () { send("video_complete"); }); ctl.textContent = "▶"; });
+    nplay.addEventListener("click", function () {
+      once("video_play", function () { send("video_play"); });
+      nplay.hidden = true; showCue(0); aud.play(); ctl.textContent = "❚❚";
+    });
+    ctl.addEventListener("click", function () {
+      if (aud.paused) { aud.play(); ctl.textContent = "❚❚"; } else { aud.pause(); ctl.textContent = "▶"; }
+    });
+  }
+
+  // 6. Clicks that matter.
+  document.getElementById("book").addEventListener("click", function () { send("cta_book"); });
+  document.getElementById("reply").addEventListener("click", function () { send("cta_reply"); });
+})();
+</script>
+</body>
+</html>
