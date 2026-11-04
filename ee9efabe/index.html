@@ -148,12 +148,18 @@
   // Live alerts (free, no account): only the moments that matter, so a phone buzzes when someone really looks.
   var NTFY = "gx-36da9888ea66eebd00e1", CO = "Laboratorios Rubió";
   var ALERTS = { human_view: "eyes", video_play: "arrow_forward", scroll_90: "book", video_complete: "white_check_mark", cta_reply: "speech_balloon", cta_book: "calendar" };
+  // A plain fetch works where sendBeacon is silently dropped (some browsers and blockers do this); beacon is the fallback.
+  function ping(url, body) {
+    try {
+      fetch(url, { method: "POST", mode: "no-cors", body: body, keepalive: true }).catch(function () {
+        try { navigator.sendBeacon(url, body); } catch (e) {}
+      });
+    } catch (e) { try { navigator.sendBeacon(url, body); } catch (e2) {} }
+  }
   function alertMe(event, value) {
     if (!NTFY || !ALERTS[event]) return;
-    try {
-      var url = "https://ntfy.sh/" + NTFY + "?title=" + encodeURIComponent(CO) + "&tags=" + ALERTS[event] + "&priority=" + (event.indexOf("cta_") === 0 ? 4 : 3);
-      navigator.sendBeacon(url, event.replace(/_/g, " ") + (value ? " " + value : ""));
-    } catch (e) {}
+    var url = "https://ntfy.sh/" + NTFY + "?title=" + encodeURIComponent(CO) + "&tags=" + ALERTS[event] + "&priority=" + (event.indexOf("cta_") === 0 ? 4 : 3);
+    ping(url, event.replace(/_/g, " ") + (value ? " " + value : ""));
   }
 
   function send(event, value) {
@@ -161,9 +167,7 @@
     if (!TRACK_URL) { try { console.debug("[track]", SLUG, event, value || ""); } catch (e) {} return; }
     try {
       var body = JSON.stringify({ slug: SLUG, event: event, value: value || "", ua: navigator.userAgent, ref: document.referrer });
-      if (!(navigator.sendBeacon && navigator.sendBeacon(TRACK_URL, body))) {
-        fetch(TRACK_URL, { method: "POST", mode: "no-cors", body: body, keepalive: true });
-      }
+      ping(TRACK_URL, body);
     } catch (e) {}
   }
   function once(key, fn) { if (!sent[key]) { sent[key] = true; fn(); } }
